@@ -8,6 +8,7 @@ import random
 
 app = Flask(__name__)
 
+## implementatiion of the lda on github.com/vvennela/ml/lda. API tested with postman. 
 
 @app.route('/api', methods=['POST'])
 def process_document():
@@ -22,8 +23,6 @@ def process_document():
 # Split the data into training and testing sets
    split_percentage = 90
    X_train_document, X_test_document = np.split(data_samples, [int(len(data_samples)*(split_percentage/100))])
-
-# Vectorize the data
    tfidf_vectorizer = TfidfVectorizer(max_df = 0.95, min_df = 100, stop_words = 'english')
    tfidf = tfidf_vectorizer.fit_transform(data_samples) 
    tfidf = tfidf.toarray()
@@ -32,12 +31,12 @@ def process_document():
    X_train = csr_matrix(X_train)
    X_test = csr_matrix(X_test)
 
-# Fit the LDA model
+# Fit LDA model
    topics = num_topics
    model = LatentDirichletAllocation(n_components = topics)
    model.fit(X_train)
 
-# Prepare the top words for each topic
+
    tf_feature_names = tfidf_vectorizer.get_feature_names_out()
    top_words = {}
    for topic_idx, topic in enumerate(model.components_):
